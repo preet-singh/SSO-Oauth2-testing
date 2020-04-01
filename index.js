@@ -23,6 +23,47 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
+// render page1
+app.get('/page1', function(request, response) {
+    response.render('pages/page1');
+});
+
+// render page2
+app.get('/page2', function(request, response) {
+    response.render('pages/page2');
+});
+
+// render page3
+app.get('/page3', function(request, response) {
+    response.render('pages/page3');
+});
+
+// render the products page
+app.get('/products', function(request, response) {
+    response.render('pages/products');
+});
+
+// render the cart page
+app.get('/cart', function(request, response) {
+    response.render('pages/cart');
+});
+
+// render the transactions page
+app.get('/transactions', function(request, response) {
+    response.render('pages/transactions');
+});
+
+// render the support page
+app.get('/support', function(request, response) {
+    response.render('pages/support');
+  });
+
+// render the care page
+app.get('/care', function(request, response) {
+    response.render('pages/care');
+});
+
+
 // render the chatbot page
 app.get('/chatbot', function(request, response) {
     response.render('pages/chatbot');
@@ -111,7 +152,8 @@ app.post('/getToken', function(request, response) {
         	}
         	// if successful then response with the token
         	else {
-        		//console.log(decoded);
+                console.log('token decoded');
+        		console.log(decoded);
         		response.status(200).json({
                     "decoded": decoded,
                     "token": token
@@ -126,13 +168,14 @@ app.post('/token', function(request, response) {
     // the authorization code, if they are not, then we will respond with an error.
     let auth = request.get("Authorization");  // auth is in base64(username:password)  so we need to decode the base64
     let tmp = auth.split(' '); 
-    let buf = new Buffer(tmp[1], 'base64'); 
+    let buf = Buffer.from(tmp[1], 'base64'); 
     let plain_auth = buf.toString();      
     let creds = plain_auth.split(':');
     let username = creds[0];
     let password = creds[1];
     // validate that the client id and the client secret are correct
     if((username == 'clientid') && (password == 'clientsecret')) { 
+        console.log('req body code')
         console.log(request.body.code);
         // validate the authorization code, and if it is successful send the OpenID Connect Token, otherwise send an error.
         if(request.body.code == "secretcode"){

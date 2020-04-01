@@ -15,34 +15,40 @@
   <!--Example for the pop out chat window -->
   <div id="LP_DIV_1469121663370"></div>
   <script>
+      console.log('test text');
       lpTag.identities = []
       lpTag.identities.push(identityFn);
       function identityFn(callback) {
           callback({
+              username: "clientid",
+              password: "clientsecret",
               iss: "https://www.example.com",
               acr: "loa1", 
               sub: "4255551212",
-              // code: "secretcode"
+              //code: "secretcode"
           });
+          let authorization_code = "secretcode";
+          callback(authorization_code);
         }
       
       // Query the token endoint to get the OpenID Connect Token
-      lpGetAuthenticationToken = (callback) => {
-      $.post( "/token", function( data ) {
-        console.log(data);
-        //if successful
-        if(data.Fail != "undefined" && data.Fail != "404"){
-            var id_token = data.token;
-            callback(id_token);
-         } 
-         //on failure
-         else {
-            callback("",data.error);
-         }
-      });
-      let authorization_code = "secretcode";
-      callback(authorization_code);
-    }
+    //   lpGetAuthenticationToken = (callback) => {
+    //   $.post( "/token", function( data ) {
+    //     console.log('token decoded');
+    //     console.log(data);
+    //     //if successful
+    //     if(data.Fail != "undefined" && data.Fail != "404"){
+    //         var id_token = data.token;
+    //         callback(id_token);
+    //      } 
+    //      //on failure
+    //      else {
+    //         callback("",data.error);
+    //      }
+    //   });
+    //   let authorization_code = "secretcode";
+    //   callback(authorization_code);
+    // }
     //   // Create the authorization code and supply it to the callback method
     //   var authorization_code = "secretcode";
     //   callback(authorization_code);

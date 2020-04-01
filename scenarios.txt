@@ -1,0 +1,105 @@
+------------------------------------------------------------------------------------------------------------------------------
+Scenario 1: 
+Clients wants to gather the conversation data for both chat and messaging and store it their datawarehouse? 
+Conversation must inclueds all the data associated with that conversation from the beggining of conversation to the end of it 
+------------------------------------------------------------------------------------------------------------------------------
+Answer:
+- Can use report builder to build data that is needed
+
+The client will need to use the following APIs to gather all necessary data wanted on chats and messaging:
+- Data Access API
+     -> reporting capabilities of their account by accessing their entire raw data 
+     -> data includes full information about their agents’ activities and visitors’ journeys
+- Messaging Interactions API 
+     -> makes it possible to search, filter and analyze data and transcripts of open and closed conversations
+- Consumer Messaging History API 
+     -> allows retrieval of up to 13 months of historical conversations data
+- Engagement History API
+
+- To use the APIs above the client will need to retrieve their Domain by using LPs Domain API
+- Client will need to save and store data on their own database 
+
+https://knowledge.liveperson.com/data-reporting-report-builder-report-builder-overview.html
+https://developers.liveperson.com/data-access-api-overview.html
+https://developers.liveperson.com/consumer-messaging-history-api-overview.html
+https://developers.liveperson.com/engagement-history-api-overview.html
+https://developers.liveperson.com/common-resources-domain-api.html
+
+------------------------------------------------------------------------------------------------------------------------------
+Scenario 2:
+Clients is looking forward to build a dashboard for their managers that shows real time data on their agents,
+and conversation for both messaging and chat. Dashbaord must secure with logins.
+------------------------------------------------------------------------------------------------------------------------------
+Answer:
+- Client will need to use the realtime messaging dashboard in order to build their dashboard
+    -> leverages the power of the real time operational and administrative APIs 
+    -> enables users to monitor he brand’s account health in both real time and for the previous 24 hours.
+
+- Client will need to use the Operational Real-Time API to track data in real-time of agents 
+    -> agent managers can measure performance at account level, at skill level, or even agent level. 
+    -> data is provided for the previous 24 hours, up to the last 5 minutes, with a refresh rate of 10 seconds.
+    -> data is returned as JSON
+    -> need API key
+    -> can also use AGENT METRICS API
+
+- Client will need to use the Messaging Operations API to track data of messaging
+    -> agent managers to extract information about their call center on the account, skill, and agent level. 
+    -> data includes closed conversations and their associated attributes, such as customer satisfaction, average conversation length, resolved status etc...
+
+- For the dashboard to be secured by login, client will need to have SSO implemented
+    -> Use this consumer URL for connecting to the Real Time Dashboard: 
+    https://<LPDomain>/hc/s-<YourAccountNumber>/web/m-LP/samlAssertionMembersArea/home.jsp?lpservice=rtDashboard&servicepath=a%2F~~accountid~~%2F%23%2C~~ssokey~~
+
+https://knowledge.liveperson.com/data-reporting-messaging-real-time-data-real-time-messaging-dashboard.html
+https://developers.liveperson.com/operational-realtime-api-overview.html
+https://developers.liveperson.com/agent-metrics-api-overview.html
+https://developers.liveperson.com/messaging-operations-api-overview.html
+https://knowledge.liveperson.com/security-regulations-login-sso-unified-login.html
+
+------------------------------------------------------------------------------------------------------------------------------
+Scenario 3: 
+Client is looking forward to capture the various kind of events associated with the conversation. 
+Client want to send data to their system when particular event occures on webpage. 
+EX: when button shows up on page, when visitor clicks on button, when conversation becomes interactive, when conversation is closed etc.. 
+This events should sent necessary data to clients site catalyst system they have built
+------------------------------------------------------------------------------------------------------------------------------
+Answer:
+- Client will need to make use of the Monitoring API in order to track consumer/visitor events
+    -> EX: in order to present a "Click to Message" button (an engagement) with an updated state of availability (a certain number of agents online, a skill being available and so on), 
+    -> you can access the specific engagement using this API and display it to the consumer only if it is available. 
+    -> Monitoring API allows you to report data about the consumer and get information back about engagements and campaigns relevant to specific consumers
+
+- Client will also need to make use of the Visit Information API to pull data in real-time about the visitor, engagement and session
+    -> provides a way to pull data in real-time about the visitor, engagement and session to be used by the agent during the conversation
+    -> for example, referrer, engagement attributes, etc.
+
+
+https://developers.liveperson.com/monitoring-api-overview.html
+https://developers.liveperson.com/monitoring-api-getting-started.html
+https://developers.liveperson.com/visit-information-api-overview.html
+
+------------------------------------------------------------------------------------------------------------------------------
+Scenario 4: Client want to add messaging in their mobile app. How to do it?
+------------------------------------------------------------------------------------------------------------------------------
+Answer:
+- Client will need to have the following cofigured:
+    -> LiveEngage account with messaging enabled.
+    -> OAuth2.0 authentication enabled
+    -> for iOS native app with:
+        -> Bundle ID registered in an Apple developer account
+        -> Xcode with the latest GA version
+
+    -> for Android native app with:
+        -> Package name
+        -> Android Studio (any version)
+
+- Implementation overview:
+    -> For successful deployment client needs to implement three main components:
+        1. Deploy all customization you require using the Mobile App Messaging SDK deployment guide for iOS or Android.
+        2. Configure Push Notifications
+        3. Configure Authentication [OAuth or API keys or both?] 
+
+https://developers.liveperson.com/mobile-app-messaging-add-messaging-to-your-app.html
+https://developers.liveperson.com/consumer-experience-ios-sdk-quick-start.html
+https://developers.liveperson.com/android-quickstart.html
+------------------------------------------------------------------------------------------------------------------------------
