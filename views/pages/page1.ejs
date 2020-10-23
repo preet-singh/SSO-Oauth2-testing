@@ -18,15 +18,20 @@
   <div id="LP_DIV_1446650188048"></div>
 <script>
     lpTag.sdes = lpTag.sdes||[];
-lpTag.sdes.push(
-   {
-        "type": "error",  //MANDATORY
-        "error": {
-           "message": "some random error message",  // THE ERROR MESSAGE
-           "code": "er100004"  // THE ERROR CODE 
+    lpTag.sdes.push(
+        {
+            "type": "error",  //MANDATORY
+            "error": {
+                "message": "some random error message",  // THE ERROR MESSAGE
+                "code": "er100004"  // THE ERROR CODE 
+                }
         }
-   }
-);
+    );
+    lpTag.section = [  //works with testing in LE
+        "page1",  //CAN BE A SECTION OR A SUB-SECTION
+        "page2",
+        "page3"
+    ];
 </script>
 
 </body>

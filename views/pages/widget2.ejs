@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes"/>
+        <script type='text/javascript' src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script type='text/javascript' src='https://lpcdn.lpsnmedia.net/webagent/client-SDK.min.js'></script>
+        <script type='text/javascript' src="https://chancejs.com/chance.min.js"></script>
+        <title>Widget test page</title>
+    
+    </head>
+    <body>
+        <h1>Widget page 2</h1>
+
+        <div id='content'>
+            <label>Widget 2 - testing visitor info</label>
+            <div class='message-panel' id='main_container_personal'></div>
+            <label>Transcript</label>
+            <div class='message-panel' id='main_container_transcript'></div>
+            <label>Unauthenticated - visitor information</label>
+            <div class='message-panel' id='main_container_visitor'></div>
+        </div>      
+
+        <script>
+        //Agent SDK Notification
+        let notificationHandler = function(data) {
+            // Do something with the notifications
+            console.log('notify an agent', data);
+        };
+
+        //Check for LPTag
+        console.log('LPTag SDK has loaded');
+        lpTag.agentSDK.init({
+            notificationCallback: notificationHandler,
+        });
+        var convodata = "chatInfo";
+
+        let onSuccess = function(data){
+            console.log('onSuccess', data);
+            // start internal conversation
+            accountId = data.accountId;
+            console.log(`accountId = ${accountId}`);
+
+            leConversationId = data.rtSessionId;
+            console.log(`leConversationId = ${leConversationId}`);
+        }
+
+        let onError = function(error){
+            console.log('Error while getting current chat data from SDK  = '  + error);
+            return;
+        }
+
+        //Authenticated SDEs
+        let unauthOnSuccess = function(data){
+                console.log('unauth SDEs: ', data);
+                //if(data){
+                    let visitorInfo = data.visitorInfo;
+                    // for(let [key, value] of Object.entries(_value)){
+                    //             console.log(`unauth visitor info: ${key}: ${value}`);
+                    //             $('#main_container_visitor').append(`&emsp;<bold>${key}:</bold>: ${value}</br>`);
+                    //         }   
+                    lpTag.agentSDK.get(visitorInfo, 
+                        function(data){
+                            console.log(`visitorInfo: `, data);
+                            for(let [key, value] of Object.entries(visitorInfo)){
+                                console.log(`VISITOR INFO: ${key}: ${value}`);
+                                $('#main_container_visitor').append(`&emsp;<bold>${key}</bold>: ${value}</br>`);
+                            }   
+                    },
+                    function(error){
+                        console.log(`visitorInfo error: `, error);
+                    });
+                }
+    
+        let unauthOnError = function(error){
+            console.log('Error while getting current authenticated data from SDK  = '  + error);
+            return;
+        }
+
+        let unauthGetData = "unauthData";
+        lpTag.agentSDK.get(unauthGetData, unauthOnSuccess, unauthOnError);
+        //}
+        //         let visitorInfo = "visitorInfo";
+        //         // for(let [key, value] of Object.entries(_value)){
+        //         //             console.log(`unauth visitor info: ${key}: ${value}`);
+        //         //             $('#main_container_visitor').append(`&emsp;<bold>${key}:</bold>: ${value}</br>`);
+        //         //         }   
+        //         lpTag.agentSDK.get(visitorInfo, 
+        //             function(data){
+        //                 console.log(`visitorInfo: `, data);
+        //                 for(let [key, value] of Object.entries(_value)){
+        //                     //console.log(`${key}: ${value}`);
+        //                     $('#main_container_visitor').append(`&emsp;<bold>${key}:</bold>: ${value}</br>`);
+        //                 }   
+        //         },
+        //         function(error){
+        //             console.log(`visitorInfo error: `, error);
+        //         });
+        //     }
+    
+
+        // let unauthGetData = "unauthData";
+        // lpTag.agentSDK.get(unauthGetData, unauthOnSuccess, unauthOnError);
+
+
+        //Check the chatting state
+        lpTag.agentSDK.bind('visitorInfo.chattingVisitorState', 
+        function (data) {
+           console.log(`visitorInfo.chattingVisitorState...`, data);
+           if (data["newValue"] === "ended") {
+            //get transcript lines
+            let transcriptGetData = "chatTranscript.lines";
+            lpTag.agentSDK.get(transcriptGetData,
+                function(lines) {
+                    
+                    // let textToSave = '';
+                    // let filename = 'transcript.txt';
+
+                    // lines.forEach(element => {
+                    //     textToSave += `${element.source}: ${element.text}\n`
+                    // });
+                    // console.log(`textToSave: ${textToSave}`);
+
+                    // //Download the chat info
+                    // //function download(filename, text) {
+                    //     let element = document.createElement('a');
+                    //     //element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent("123"));
+                    //     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(textToSave));
+                    //     element.setAttribute('download', filename);
+                    //     element.style.display = 'none';
+                    //     document.body.appendChild(element);
+                    //     element.click();
+                    //     document.body.removeChild(element);
+                        //}
+                        // Start file download.
+                        //download("hello.txt","This is the content of my file :)");
+                });
+           }
+        },
+        lpTag.agentSDK.get(convodata, onSuccess, onError));
+
+        //Print the transcript to widget
+        let printTextMessage = function (msg, sender){
+            console.log(`printTextMessage - sender: ${sender}: ${msg}`);
+            let classBubble = '';
+            if (sender && sender === 'agent'){
+                msg = '<b>Agent:</b> ' + msg;
+                classMessage = 'message-agent';
+            }
+            else {
+                msg = '<b>Visitor:</b> ' + msg;
+                classMessage = 'message-visitor';
+            }
+            //append message to DOM
+            $('#main_container_transcript').append(`<div class="agentText message-bubble ${classMessage}">` + msg + '</div>');
+            //get all agent messages
+            let botTexts = document.getElementsByClassName('agentText');
+            //find the last message
+            let latestText = botTexts[botTexts.length - 1];
+            //scroll down the windown
+            $('body, html').animate({ scrollTop: $(latestText).offset().top},1000);
+        }
+        //call transcript lines
+        let transcriptOnSuccess = function(data){
+            console.log('transcriptOnSuccess: ', data);
+            data.newValue.forEach(element => {
+                console.log(`${element.source}: ${element.text}`);
+                printTextMessage(element.text, element.source);
+            });
+        };
+        
+        let transcriptOnError = function(error){
+            console.log('transcriptOnError: Error while getting current chat data from SDK  = '  + error);
+            return;
+        }
+
+        let transcriptGetData = "chatTranscript.lines";
+        lpTag.agentSDK.bind(transcriptGetData, transcriptOnSuccess, transcriptOnError);
+
+        window.addEventListener("load", function(){
+            //console.log(`Load...`);
+        });
+
+        //Unauthenticated SDS w/pre-chat questions
+        //let arr;
+            //arr = [
+                //     {"displayName":data.name.displayName,"value":data.name.value},
+                //     {"displayName":data.email.displayName,"value":data.email.value},
+                //     {"displayName":data.phone.displayName,"value":data.phone.value}
+                // ];
+
+                // str = "<b>" + arr[0].displayName + "</b>: " + arr[0].value + "<br/><b>" + arr[1].displayName + "</b>: " + arr[1].value + "<br/><b>" + arr[2].displayName + "</b>: " + arr[2].value + "<br/>";
+
+                // for (var i = 0; i < data.customizedQuestions.length; i++){
+                //     arr.push(data.customizedQuestions[i]);
+                //     str += "<b>" + data.customizedQuestions[i].displayName + "</b>: " + data.customizedQuestions[i].value + "<br/>";
+                // }
+                // str += "<br/><i>Marketo information is as follows</i>:<br/><br/><b>Form Id</b>: " + formId + "<br/><b>Munchkin Id</b>: " + munchkinId + "<br/><br/>";
+
+                // document.getElementById("main_container_visitor").innerHTML = str;
+            
+            // var unauthOnError = function(err) {
+            //     console.log(err);
+            //     str = "Error: " + err;
+            //     document.getElementById("main_container_visitor").innerHTML = str;
+            // }
+            // lpTag.agentSDK.get("surveyQuestions.preChat", unauthOnSuccess, unauthOnError);
+        
+
+        </script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </body>
+</html>

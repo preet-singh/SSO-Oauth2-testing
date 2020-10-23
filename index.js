@@ -3,8 +3,7 @@ let app = express();
 let bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// jsonwebtoken is required for you to generate and sign the OpenID Connect Token
-// You can read more about this module here: https://github.com/auth0/node-jsonwebtoken
+let https = require('https');
 let jwt = require('jsonwebtoken');
 let fs = require('fs');
 let cert_pub = fs.readFileSync(__dirname + '/rsa-public-key.pem');
@@ -63,7 +62,6 @@ app.get('/care', function(request, response) {
     response.render('pages/care');
 });
 
-
 // render the chatbot page
 app.get('/chatbot', function(request, response) {
     response.render('pages/chatbot');
@@ -74,10 +72,40 @@ app.get('/codeflow', function(request, response) {
   response.render('pages/codeflow');
 });
 
+// render the widget 
+app.get('/widget', function(request, response) {
+    response.render('pages/widget');
+});
+
+// render the widget2 
+app.get('/widget2', function(request, response) {
+    response.render('pages/widget2');
+});
+
+// render the testWidget 
+app.get('/testWidget', function(request, response) {
+    response.render('pages/testWidget');
+});
+
+// render sdk
+app.get('/sdk', function(request, response) {
+    response.render('pages/sdk');
+});
+
+//render msgwinsdsk
+// app.get('/messaging-window', function(request, response) {
+//     response.render('messaging-window');
+// });
+
 // render the customer page
 // app.get('/customer', function(request, response) {
 //   response.render('pages/customer');
 // });
+
+// render the random page
+app.get('/random', function(request, response) {
+  response.render('pages/random');
+});
 
 // used to generate the OpenID Connect Token for the implicit flow
 app.post('/getToken', function(request, response) {
@@ -281,6 +309,16 @@ app.get('/authorize', function(request, response) {
     // for the redirect, you need to use the redirect_uri from the request and append the authorization code to the url
     response.redirect(request.query.redirect_uri+"&code="+authorization_code);
 });
+
+let port = 443;
+https.createServer({
+    key: fs.readFileSync('./key.pem'),
+    cert: fs.readFileSync('./cert.pem'),
+    passphrase: 'password'
+    }, app)
+    .listen(port, function () {
+        console.log(`Bucket Server is running on the port ${port}`);
+})
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));

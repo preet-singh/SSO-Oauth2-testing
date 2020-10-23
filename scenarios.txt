@@ -16,14 +16,11 @@ The client will need to use the following APIs to gather all necessary data want
      -> allows retrieval of up to 13 months of historical conversations data
 - Engagement History API
 
-- To use the APIs above the client will need to retrieve their Domain by using LPs Domain API
-- Client will need to save and store data on their own database 
 
 https://knowledge.liveperson.com/data-reporting-report-builder-report-builder-overview.html
 https://developers.liveperson.com/data-access-api-overview.html
 https://developers.liveperson.com/consumer-messaging-history-api-overview.html
 https://developers.liveperson.com/engagement-history-api-overview.html
-https://developers.liveperson.com/common-resources-domain-api.html
 
 ------------------------------------------------------------------------------------------------------------------------------
 Scenario 2:
@@ -73,6 +70,7 @@ Answer:
     -> provides a way to pull data in real-time about the visitor, engagement and session to be used by the agent during the conversation
     -> for example, referrer, engagement attributes, etc.
 
+Manan notes - LE TAG EVENTS - this will tell us about the different events
 
 https://developers.liveperson.com/monitoring-api-overview.html
 https://developers.liveperson.com/monitoring-api-getting-started.html
@@ -83,6 +81,7 @@ Scenario 4: Client want to add messaging in their mobile app. How to do it?
 ------------------------------------------------------------------------------------------------------------------------------
 Answer:
 - Client will need to have the following cofigured:
+    -> Mobile App Messaging SDK needs to be used
     -> LiveEngage account with messaging enabled.
     -> OAuth2.0 authentication enabled
     -> for iOS native app with:
