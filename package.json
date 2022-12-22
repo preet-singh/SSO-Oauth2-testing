@@ -14,7 +14,7 @@
     "ejs": "2.4.1",
     "express": "^4.17.1",
     "https-server": "^0.1.2",
-    "jsonwebtoken": "^7.0.0"
+    "jsonwebtoken": "^9.0.0"
   },
   "repository": {
     "type": "git",
